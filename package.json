@@ -1,0 +1,36 @@
+{
+  "name": "simple-whitenoise-for-babies",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "author": {
+    "name": "Maksim Buryshynets",
+    "email": "arhor18@gmail.com"
+  },
+  "scripts": {
+    "serve": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.9",
+    "@mui/material": "^5.11.9",
+    "mobx": "^6.8.0",
+    "mobx-react-lite": "^3.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router": "^6.8.1",
+    "react-router-dom": "^6.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
+    "eslint": "^8.34.0",
+    "vite": "^4.1.0",
+    "vite-plugin-eslint": "^1.8.1"
+  }
+}
