@@ -1,0 +1,17 @@
+### VS Code ###
+.vscode/
+
+### Custom section ###
+dist/
+coverage/
+
+# Logs
+logs/
+*.log
+
+# Dependency directories
+node_modules/
+
+# local env files
+.env.local
+.env.*.local
