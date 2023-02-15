@@ -7,15 +7,17 @@ import StopIcon from '@mui/icons-material/Stop';
 
 const HomePage = () => {
     const audio = useMemo(() => {
+        console.log('calculation...');
         const element = new Audio('/audio/white-noise.ogg');
         element.loop = true;
         return element;
-    });
+    }, []);
     const [paused, setPaused] = useState(audio.paused);
 
-    const togglePlay = () => {
-        if (paused) {
-            audio.play().then(() => setPaused(false));
+    const togglePlay = async () => {
+        if (audio.paused) {
+            await audio.play();
+            setPaused(false);
         } else {
             audio.pause();
             setPaused(true);
@@ -24,7 +26,7 @@ const HomePage = () => {
 
     return (
         <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <IconButton size="large" sx={{ background: '#00cc00' }} onClick={togglePlay}>
+            <IconButton size="large" sx={{ background: '#9900ff' }} onClick={togglePlay}>
                 {
                     paused
                         ? <PlayIcon />

@@ -2,12 +2,15 @@ import { fileURLToPath, URL } from 'url';
 import dns from 'dns';
 
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, splitVendorChunkPlugin } from 'vite';
 
 dns.setDefaultResultOrder('verbatim');
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [
+        react(),
+        splitVendorChunkPlugin(),
+    ],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('src', import.meta.url)),
