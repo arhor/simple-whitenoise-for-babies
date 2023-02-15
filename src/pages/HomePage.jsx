@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 
-import whiteNoiseUrl from '@/assets/audio/white-noise.ogg';
+import whiteNoiseUrl from '~/assets/audio/white-noise.ogg';
 
 const HomePage = () => {
     const audio = useMemo(() => {

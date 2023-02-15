@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import HomePage from '@/pages/HomePage';
-import NotFound from '@/pages/NotFound';
-import Settings from '@/pages/Settings';
+import HomePage from '~/pages/HomePage';
+import NotFound from '~/pages/NotFound';
+import Settings from '~/pages/Settings';
 
 const AppRouter = () => (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
