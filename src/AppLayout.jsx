@@ -9,7 +9,7 @@ const AppLayout = () => (
     <ThemeProvider>
         <CssBaseline />
         <StoreProvider>
-            <Container component="main" maxWidth="sm" sx={{ p: 5 }}>
+            <Container component="main" maxWidth="sm">
                 <AppRouter />
             </Container>
         </StoreProvider>
