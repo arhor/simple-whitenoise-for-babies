@@ -26,8 +26,18 @@ const HomePage = () => {
     };
 
     return (
-        <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <IconButton size="large" sx={{ background: '#9900ff' }} onClick={togglePlay}>
+        <Box sx={{
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        }}>
+            <IconButton
+                size="large"
+                sx={{ background: '#9900ff' }}
+                onClick={togglePlay}
+                aria-label="toggle white noise"
+            >
                 {
                     paused
                         ? <PlayIcon />

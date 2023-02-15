@@ -2,16 +2,17 @@ import { fileURLToPath, URL } from 'url';
 import dns from 'dns';
 
 import react from '@vitejs/plugin-react';
-import { defineConfig, splitVendorChunkPlugin } from 'vite';
+import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 dns.setDefaultResultOrder('verbatim');
 
+const basePath = '/simple-whitenoise-for-babies';
+
 export default defineConfig({
-    base: '/simple-whitenoise-for-babies/',
+    base: `${basePath}/`,
     plugins: [
         react(),
-        splitVendorChunkPlugin(),
         VitePWA({
             registerType: 'autoUpdate',
             workbox: {
@@ -27,15 +28,21 @@ export default defineConfig({
                 description: 'Simple white noise player helping babies to sleep',            
                 icons: [
                     {
-                        src: '/android-chrome-192x192.png',
+                        src: 'android-chrome-192x192.png',
                         type: 'image/png',
                         sizes: '192x192',
                     },
                     {
-                        src: '/android-chrome-512x512.png',
+                        src: 'android-chrome-512x512.png',
                         type: 'image/png',
                         sizes: '512x512',
-                    }
+                    },
+                    {
+                        src: 'android-chrome-512x512.png',
+                        type: 'image/png',
+                        sizes: '512x512',
+                        purpose: 'maskable',
+                    },
                 ],
             },
         }),
@@ -44,5 +51,8 @@ export default defineConfig({
         alias: {
             '~': fileURLToPath(new URL('src', import.meta.url)),
         },
+    },
+    define: {
+        'import.meta.env.ROUTER_BASE_PATH': JSON.stringify(basePath),
     },
 });
