@@ -5,10 +5,11 @@ import IconButton from '@mui/material/IconButton';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 
+import whiteNoiseUrl from '@/assets/audio/white-noise.ogg';
+
 const HomePage = () => {
     const audio = useMemo(() => {
-        console.log('calculation...');
-        const element = new Audio('/audio/white-noise.ogg');
+        const element = new Audio(whiteNoiseUrl);
         element.loop = true;
         return element;
     }, []);
