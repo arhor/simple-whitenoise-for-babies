@@ -5,7 +5,7 @@ import NotFound from '@/pages/NotFound';
 import Settings from '@/pages/Settings';
 
 const AppRouter = () => (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
             <Route path="/"         element={<HomePage />} />
             <Route path="/settings" element={<Settings />} />
