@@ -7,6 +7,7 @@ import { defineConfig, splitVendorChunkPlugin } from 'vite';
 dns.setDefaultResultOrder('verbatim');
 
 export default defineConfig({
+    base: '/simple-whitenoise-for-babies/',
     plugins: [
         react(),
         splitVendorChunkPlugin(),
