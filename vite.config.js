@@ -24,8 +24,10 @@ export default defineConfig({
                 '**/*',
             ],
             manifest: {
+                name: 'Simple white noise for babies',
+                short_name: 'Simple white noise',
+                description: 'Simple white noise player helping babies to sleep',
                 theme_color: '#ffffff',
-                description: 'Simple white noise player helping babies to sleep',            
                 icons: [
                     {
                         src: 'android-chrome-192x192.png',
@@ -36,6 +38,12 @@ export default defineConfig({
                         src: 'android-chrome-512x512.png',
                         type: 'image/png',
                         sizes: '512x512',
+                    },
+                    {
+                        src: 'android-chrome-512x512.png',
+                        type: 'image/png',
+                        sizes: '512x512',
+                        purpose: 'any',
                     },
                     {
                         src: 'android-chrome-512x512.png',
