@@ -7,10 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 dns.setDefaultResultOrder('verbatim');
 
-const basePath = '/simple-whitenoise-for-babies';
-
 export default defineConfig({
-    base: `${basePath}/`,
     plugins: [
         react(),
         splitVendorChunkPlugin(),
@@ -29,6 +26,18 @@ export default defineConfig({
                 short_name: 'Simple white noise',
                 description: 'Simple white noise player helping babies to sleep',
                 theme_color: '#ffffff',
+                orientation: 'any',
+                shortcuts: [
+                    {
+                        url: '/',
+                        name: 'Home',
+                        description: 'Home page',
+                    },
+                ],
+                categories: [
+                    'baby',
+                    'wellness',
+                ],
                 icons: [
                     {
                         src: 'android-chrome-192x192.png',
@@ -60,8 +69,5 @@ export default defineConfig({
         alias: {
             '~': fileURLToPath(new URL('src', import.meta.url)),
         },
-    },
-    define: {
-        'import.meta.env.ROUTER_BASE_PATH': JSON.stringify(basePath),
     },
 });
