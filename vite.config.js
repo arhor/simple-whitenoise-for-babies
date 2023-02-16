@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'url';
 import dns from 'dns';
 
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, splitVendorChunkPlugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 dns.setDefaultResultOrder('verbatim');
@@ -13,6 +13,7 @@ export default defineConfig({
     base: `${basePath}/`,
     plugins: [
         react(),
+        splitVendorChunkPlugin(),
         VitePWA({
             registerType: 'autoUpdate',
             workbox: {
