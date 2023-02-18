@@ -8,21 +8,35 @@ import StopIcon from '@mui/icons-material/Stop';
 import whiteNoiseUrl from '~/assets/audio/white-noise.ogg';
 
 const HomePage = () => {
-    const audioContext = useMemo(() => new (window.AudioContext ?? window.webkitAudioContext)(), []);
     const [ isPlaying, setIsPlaying ] = useState(false);
     const [ audioData, setAudioData ] = useState(null);
     const [ audioNode, setAudioNode ] = useState(null);
 
+    const audioContext = useMemo(() => ({
+        get value() {
+            Object.defineProperty(this, 'value', {
+                value: new (window.AudioContext ?? window.webkitAudioContext)(),
+            });
+            return this.value;
+        },
+    }), []);
+
     useEffect(() => {
         fetch(whiteNoiseUrl, { mode: 'cors' })
             .then((resp) => resp.arrayBuffer())
-            .then((buff) => audioContext.decodeAudioData(buff))
-            .then((data) => setAudioData(data));
+            .then((buff) => setAudioData({
+                get value() {
+                    Object.defineProperty(this, 'value', {
+                        value: audioContext.value.decodeAudioData(buff),
+                    });
+                    return this.value;
+                },
+            }));
     }, []);
 
-    const togglePlay = () => {
-        if (audioContext.state === 'suspended') {
-            audioContext.resume();
+    const togglePlay = async () => {
+        if (audioContext.value.state === 'suspended') {
+            audioContext.value.resume();
         }
         if (isPlaying) {
             audioNode.stop();
@@ -30,9 +44,9 @@ const HomePage = () => {
             setAudioNode(null);
             setIsPlaying(false);
         } else {
-            const source = audioContext.createBufferSource();
-            source.buffer = audioData;
-            source.connect(audioContext.destination);
+            const source = audioContext.value.createBufferSource();
+            source.buffer = await audioData.value;
+            source.connect(audioContext.value.destination);
             source.loop = true;
             source.start();
             setAudioNode(source);
