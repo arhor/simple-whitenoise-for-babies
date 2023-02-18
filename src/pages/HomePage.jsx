@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -7,58 +7,52 @@ import StopIcon from '@mui/icons-material/Stop';
 
 import whiteNoiseUrl from '~/assets/audio/white-noise.ogg';
 
-//////////////////////////////////////////////////////////////////////////////
-// global so we can access them from handlers
-const actx = new (AudioContext || webkitAudioContext)();
-let src = whiteNoiseUrl;
-let audioData;
-let srcNode;  
-
-// Load some audio (CORS need to be allowed or we won't be able to decode the data)
-fetch(src, {mode: "cors"})
-    .then((resp) => { return resp.arrayBuffer() })
-    .then((buff) => { actx.decodeAudioData(buff, playLoop) });
-
-// Sets up a new source node as needed as stopping will render current invalid
-function playLoop(abuffer) {
-    if (!audioData) {
-        audioData = abuffer; // create a reference for control buttons
-    }
-    srcNode = actx.createBufferSource();  // create audio source
-    srcNode.buffer = abuffer;             // use decoded buffer
-    srcNode.connect(actx.destination);    // create output
-    srcNode.loop = true;                  // takes care of perfect looping
-    srcNode.start();                      // play...
-}
-
-// Simple example control
-document.querySelector("button").onclick = function() {
-    if (srcNode) {
-        srcNode.stop();
-        srcNode = null;   
-        this.innerText = "Play";
-    } else {
-        playLoop(audioData);
-        this.innerText = "Stop";
-    }
-};
-//////////////////////////////////////////////////////////////////////////////
-
 const HomePage = () => {
-    const audio = useMemo(() => {
-        const element = new Audio(whiteNoiseUrl);
-        element.loop = true;
-        return element;
-    }, []);
-    const [paused, setPaused] = useState(audio.paused);
+    const context = useMemo(() => new (window.AudioContext ?? window.webkitAudioContext)(), []);
+    const [ loaded, setLoaded ] = useState(false);
+    const [ paused, setPaused ] = useState(true);
+    const [ data, setData ] = useState(null);
+    const [ node, setNode ] = useState(null);
+
+    // Load some audio (CORS need to be allowed or we won't be able to decode the data)
+    useEffect(() => {
+        fetch(whiteNoiseUrl, { mode: 'cors' })
+            .then((resp) => resp.arrayBuffer())
+            .then((buff) => context.decodeAudioData(buff))
+            .then((data) => {
+                setData(data);
+                setLoaded(true);
+            });
+
+        return () => {
+            // disposer
+        };
+    }, [/* dependencies */])
+
+    // Sets up a new source node as needed as stopping will render current invalid
+    function play() {
+        const bufferSource = context.createBufferSource(); // create audio source
+        bufferSource.buffer = data;                        // use decoded buffer
+        bufferSource.connect(context.destination);         // create output
+        bufferSource.loop = true;                          // takes care of perfect looping
+        bufferSource.start();                              // play...
+        setNode(bufferSource);
+        setPaused(false);
+        console.log('play');
+    }
+
+    function stop() {
+        node.stop();
+        setNode(null);
+        setPaused(true);
+        console.log('stop');
+    }
 
     const togglePlay = async () => {
-        if (audio.paused) {
-            await audio.play();
-            setPaused(false);
+        if (paused) {
+            play();
         } else {
-            audio.pause();
-            setPaused(true);
+            stop();
         }
     };
 
@@ -69,18 +63,20 @@ const HomePage = () => {
             alignItems: 'center',
             justifyContent: 'center',
         }}>
-            <IconButton
-                size="large"
-                sx={{ background: '#9900ff' }}
-                onClick={togglePlay}
-                aria-label="toggle white noise"
-            >
-                {
-                    paused
-                        ? <PlayIcon />
-                        : <StopIcon />
-                }
-            </IconButton>
+            {loaded && (
+                <IconButton
+                    size="large"
+                    sx={{ background: '#9900ff' }}
+                    onClick={togglePlay}
+                    aria-label="toggle white noise"
+                >
+                    {
+                        paused
+                            ? <PlayIcon />
+                            : <StopIcon />
+                    }
+                </IconButton>
+            )}
         </Box>
     );
 };
