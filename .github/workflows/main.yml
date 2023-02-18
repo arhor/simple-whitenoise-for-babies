@@ -1,33 +1,33 @@
-name: Deploy PWA Starter to GitHub Pages
+name: simple-whitenoise-for-babies CI/CD
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   pull_request:
-    branches:    
-      - master
+    branches: [ master ]
   
 jobs:
   build:
+    name: Build and Publish
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: '18.14.0'
+          node-version: '18.14.1'
+          cache: 'npm'
           
       - name: Install Dependencies
         run: npm install
         
-      - name: Vite Build
+      - name: Build Application
         run: npm run build -- --base=/${{ github.event.repository.name }}/
-        
-      - name: GitHub Pages action
+      
+      - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3.7.3
         with:
           publish_dir: ./dist
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}  
