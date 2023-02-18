@@ -8,51 +8,35 @@ import StopIcon from '@mui/icons-material/Stop';
 import whiteNoiseUrl from '~/assets/audio/white-noise.ogg';
 
 const HomePage = () => {
-    const context = useMemo(() => new (window.AudioContext ?? window.webkitAudioContext)(), []);
-    const [ loaded, setLoaded ] = useState(false);
-    const [ paused, setPaused ] = useState(true);
-    const [ data, setData ] = useState(null);
-    const [ node, setNode ] = useState(null);
+    const audioContext = useMemo(() => new (window.AudioContext ?? window.webkitAudioContext)(), []);
+    const [ isPlaying, setIsPlaying ] = useState(false);
+    const [ audioData, setAudioData ] = useState(null);
+    const [ audioNode, setAudioNode ] = useState(null);
 
-    // Load some audio (CORS need to be allowed or we won't be able to decode the data)
     useEffect(() => {
         fetch(whiteNoiseUrl, { mode: 'cors' })
             .then((resp) => resp.arrayBuffer())
-            .then((buff) => context.decodeAudioData(buff))
-            .then((data) => {
-                setData(data);
-                setLoaded(true);
-            });
+            .then((buff) => audioContext.decodeAudioData(buff))
+            .then((data) => setAudioData(data));
+    }, []);
 
-        return () => {
-            // disposer
-        };
-    }, [/* dependencies */])
-
-    // Sets up a new source node as needed as stopping will render current invalid
-    function play() {
-        const bufferSource = context.createBufferSource(); // create audio source
-        bufferSource.buffer = data;                        // use decoded buffer
-        bufferSource.connect(context.destination);         // create output
-        bufferSource.loop = true;                          // takes care of perfect looping
-        bufferSource.start();                              // play...
-        setNode(bufferSource);
-        setPaused(false);
-        console.log('play');
-    }
-
-    function stop() {
-        node.stop();
-        setNode(null);
-        setPaused(true);
-        console.log('stop');
-    }
-
-    const togglePlay = async () => {
-        if (paused) {
-            play();
+    const togglePlay = () => {
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        if (isPlaying) {
+            audioNode.stop();
+            audioNode.disconnect();
+            setAudioNode(null);
+            setIsPlaying(false);
         } else {
-            stop();
+            const source = audioContext.createBufferSource();
+            source.buffer = audioData;
+            source.connect(audioContext.destination);
+            source.loop = true;
+            source.start();
+            setAudioNode(source);
+            setIsPlaying(true);
         }
     };
 
@@ -63,7 +47,7 @@ const HomePage = () => {
             alignItems: 'center',
             justifyContent: 'center',
         }}>
-            {loaded && (
+            {audioData && (
                 <IconButton
                     size="large"
                     sx={{ background: '#9900ff' }}
@@ -71,9 +55,9 @@ const HomePage = () => {
                     aria-label="toggle white noise"
                 >
                     {
-                        paused
-                            ? <PlayIcon />
-                            : <StopIcon />
+                        isPlaying
+                            ? <StopIcon />
+                            : <PlayIcon />
                     }
                 </IconButton>
             )}
