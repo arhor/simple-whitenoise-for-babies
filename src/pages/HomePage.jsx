@@ -6,32 +6,19 @@ import PlayIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 
 import whiteNoiseUrl from '~/assets/audio/white-noise.ogg';
+import { createLazy } from '~/utils';
 
 const HomePage = () => {
     const [ isPlaying, setIsPlaying ] = useState(false);
     const [ audioData, setAudioData ] = useState(null);
     const [ audioNode, setAudioNode ] = useState(null);
-
-    const audioContext = useMemo(() => ({
-        get value() {
-            Object.defineProperty(this, 'value', {
-                value: new (window.AudioContext ?? window.webkitAudioContext)(),
-            });
-            return this.value;
-        },
-    }), []);
+    const audioContext = useMemo(() => createLazy(() => new (window.AudioContext ?? window.webkitAudioContext)()), []);
 
     useEffect(() => {
         fetch(whiteNoiseUrl, { mode: 'cors' })
             .then((resp) => resp.arrayBuffer())
-            .then((buff) => setAudioData({
-                get value() {
-                    Object.defineProperty(this, 'value', {
-                        value: audioContext.value.decodeAudioData(buff),
-                    });
-                    return this.value;
-                },
-            }));
+            .then((buff) => createLazy(() => audioContext.value.decodeAudioData(buff)))
+            .then((data) => setAudioData(data));
     }, []);
 
     const togglePlay = async () => {
