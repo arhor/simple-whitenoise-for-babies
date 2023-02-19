@@ -26,7 +26,13 @@ export class ErrorBoundary extends Component {
                 : [ DEFAULT_TITLE, DEFAULT_DESCRIPTION ];
 
             return (
-                <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Box sx={{
+                    height: '100vh',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                }}>
                     <Box mb={0}>
                         <Typography variant="h4">
                             {title}
