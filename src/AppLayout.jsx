@@ -9,7 +9,7 @@ const AppLayout = () => (
     <ThemeProvider>
         <CssBaseline />
         <ErrorBoundary>
-            <Container component="main">
+            <Container component="main" disableGutters>
                 <AppRouter />
             </Container>
         </ErrorBoundary>

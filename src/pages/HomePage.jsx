@@ -107,7 +107,7 @@ const HomePage = () => {
         <Box sx={{ pb: 8 }}>
             <List>
                 {METADATA.map(({ title, color }, index) => (
-                    <ListItem key={index}>
+                    <ListItem key={index} disablePadding>
                         <ListItemButton onClick={() => selectNext(index)} selected={currIndex === index}>
                             <ListItemIcon>
                                 <EqualizerIcon color={color} />
