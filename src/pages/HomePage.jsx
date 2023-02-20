@@ -7,7 +7,7 @@ import StopIcon from '@mui/icons-material/Stop';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -19,6 +19,7 @@ import brownNoise from '~/assets/audio/brown-noise.ogg';
 import pinkNoise from '~/assets/audio/pink-noise.ogg';
 import purpleNoise from '~/assets/audio/purple-noise.ogg';
 import whiteNoise from '~/assets/audio/white-noise.ogg';
+import Timer from '~/components/Timer';
 import { COLORS } from '~/theme';
 import { createLazy } from '~/utils';
 
@@ -118,20 +119,28 @@ const HomePage = () => {
                 ))}
             </List>
             <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 1 }} elevation={3}>
-                <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-                    <IconButton
-                        size="large"
-                        sx={{ background: '#9900ff' }}
-                        onClick={switchStatus}
-                        aria-label="toggle white noise"
-                    >
-                        {
-                            isPlaying
-                                ? <StopIcon />
-                                : <PlayIcon />
-                        }
-                    </IconButton>
-                </Stack>
+                <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                    <Grid item xs={4} textAlign="center">
+                        
+                    </Grid>
+                    <Grid item xs={4} textAlign="center">
+                        <IconButton
+                            size="large"
+                            sx={{ background: '#9900ff' }}
+                            onClick={switchStatus}
+                            aria-label="toggle white noise"
+                        >
+                            {
+                                isPlaying
+                                    ? <StopIcon />
+                                    : <PlayIcon />
+                            }
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={4} textAlign="center">
+                        <Timer enabled={isPlaying} />
+                    </Grid>
+                </Grid>
             </Paper>
         </Box>
     );
