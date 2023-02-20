@@ -9,7 +9,7 @@ const AppLayout = () => (
     <ThemeProvider>
         <CssBaseline />
         <ErrorBoundary>
-            <Container component="main" maxWidth="sm">
+            <Container component="main">
                 <AppRouter />
             </Container>
         </ErrorBoundary>

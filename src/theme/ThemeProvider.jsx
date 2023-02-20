@@ -9,6 +9,13 @@ function determineColorMode(shouldUseDarkTheme) {
     return shouldUseDarkTheme ? 'dark' : 'light';
 }
 
+export const COLORS = Object.freeze({
+    BROWN: 'brown',
+    PINK: 'pink',
+    PURPLE: 'purple',
+    WHITE: 'white',
+});
+
 export const ThemeProvider = ({children}) => {
     const [colorMode, setColorMode] = useState();
     const darkThemePreferred = useMediaQuery('(prefers-color-scheme: dark)');
@@ -16,6 +23,18 @@ export const ThemeProvider = ({children}) => {
     const theme = useMemo(() => createTheme({
         palette: {
             mode: colorMode ?? determineColorMode(darkThemePreferred),
+            [COLORS.BROWN]: {
+                main: '#A52A2A',
+            },
+            [COLORS.PINK]: {
+                main: '#FFC0CB',
+            },
+            [COLORS.PURPLE]: {
+                main: '#800080',
+            },
+            [COLORS.WHITE]: {
+                main: '#FFFFFF',
+            },
         },
     }), [colorMode, darkThemePreferred]);
 
