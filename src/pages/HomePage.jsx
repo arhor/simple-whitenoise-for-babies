@@ -65,7 +65,7 @@ const HomePage = () => {
         return createLazy(() => audioContext.value.decodeAudioData(buff));
     }
 
-    async function togglePlay() {
+    async function switchStatus() {
         if (audioContext.value.state === 'suspended') {
             audioContext.value.resume();
         }
@@ -122,7 +122,7 @@ const HomePage = () => {
                     <IconButton
                         size="large"
                         sx={{ background: '#9900ff' }}
-                        onClick={togglePlay}
+                        onClick={switchStatus}
                         aria-label="toggle white noise"
                     >
                         {
