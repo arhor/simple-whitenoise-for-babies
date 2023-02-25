@@ -46,7 +46,22 @@ const METADATA = [
     },
 ];
 
-const HomePage = () => {
+function updateMediaSessionOnPlay({ title }) {
+    if ('mediaSession' in window.navigator) {
+        window.navigator.mediaSession.metadata = new MediaMetadata({
+            title,
+        });
+        window.navigator.mediaSession.playbackState = 'playing';
+    }
+}
+
+function updateMediaSessionOnStop() {
+    if ('mediaSession' in window.navigator) {
+        window.navigator.mediaSession.playbackState = 'paused';
+    }
+}
+
+export default function HomePage() {
     const [ isPlaying, setIsPlaying ] = useState(false);
     const [ audioData, setAudioData ] = useState(null);
     const [ audioNode, setAudioNode ] = useState(null);
@@ -58,6 +73,14 @@ const HomePage = () => {
         Promise
             .all(METADATA.map((track) => preload(track.url)))
             .then((data) => setAudioData(data));
+    }, []);
+
+    useEffect(() => {
+        if ('mediaSession' in window.navigator) {
+            window.navigator.mediaSession.setActionHandler('play', () => play());
+            window.navigator.mediaSession.setActionHandler('stop', () => stop());
+            window.navigator.mediaSession.setActionHandler('pause', () => stop());
+        }
     }, []);
 
     async function preload(url) {
@@ -85,13 +108,15 @@ const HomePage = () => {
         source.start();
         setAudioNode(source);
         setIsPlaying(true);
+        updateMediaSessionOnPlay({ title: METADATA[index].title })
     }
 
-    function stop() {        
+    function stop() {
         audioNode.stop();
         audioNode.disconnect();
         setAudioNode(null);
         setIsPlaying(false);
+        updateMediaSessionOnStop();
     }
 
     async function selectNext(nextIndex) {
@@ -121,7 +146,7 @@ const HomePage = () => {
             <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, p: 1 }} elevation={3}>
                 <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                     <Grid item xs={4} textAlign="center">
-                        
+
                     </Grid>
                     <Grid item xs={4} textAlign="center">
                         <IconButton
@@ -130,11 +155,9 @@ const HomePage = () => {
                             onClick={switchStatus}
                             aria-label="toggle white noise"
                         >
-                            {
-                                isPlaying
-                                    ? <StopIcon />
-                                    : <PlayIcon />
-                            }
+                            {isPlaying
+                                ? <StopIcon />
+                                : <PlayIcon />}
                         </IconButton>
                     </Grid>
                     <Grid item xs={4} textAlign="center">
@@ -144,6 +167,4 @@ const HomePage = () => {
             </Paper>
         </Box>
     );
-};
-
-export default HomePage;
+}
