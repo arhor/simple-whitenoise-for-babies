@@ -1,4 +1,4 @@
-name: simple-whitenoise-for-babies CI/CD
+name: CI
 
 on:
   push:
@@ -10,6 +10,8 @@ jobs:
   build:
     name: Build and Publish
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -17,11 +19,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.14.1'
+          node-version: '18.14.2'
           cache: 'npm'
           
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Execute tests
         run: npm run test
@@ -30,7 +32,7 @@ jobs:
         run: npm run build -- --base=/${{ github.event.repository.name }}/
       
       - name: Publish to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3.9.2
+        uses: peaceiris/actions-gh-pages@v3
         with:
           publish_dir: ./dist
           github_token: ${{ secrets.GITHUB_TOKEN }}  
